@@ -12,7 +12,7 @@ class _LoginSignUpPageState extends State<LoginSignUpPage> {
 
   String _email;
   String _password;
-
+  String _errorMessage;
   FormMode _formMode = FormMode.LOGIN;
 
   bool _isLoading;
@@ -55,7 +55,8 @@ class _LoginSignUpPageState extends State<LoginSignUpPage> {
             _showLogo(),
             _showEmailInput(),
             _showPasswordInput(),
-            _showPrimaryButton()
+            _showPrimaryButton(),
+            _showSecondaryButton()
           ],
         ),
       ),
@@ -132,7 +133,34 @@ class _LoginSignUpPageState extends State<LoginSignUpPage> {
     );
   }
 
+  Widget _showSecondaryButton() {
+    return FlatButton(
+      child: _formMode == FormMode.LOGIN
+        ? Text('Create an account', style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w300))
+        : Text('Have an account? Sign in', style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w300)),
+      onPressed: _formMode == FormMode.LOGIN
+        ? _changeFormToSignUp
+        : _changeFormToLogin,
+    );
+  }
+
   _validateAndSubmit() {
     return true;
+  }
+
+  _changeFormToSignUp() {
+    _formKey.currentState.reset();
+    _errorMessage = "";
+    setState(() {
+     _formMode = FormMode.SIGNUP; 
+    });
+  }
+
+  _changeFormToLogin() {
+    _formKey.currentState.reset();
+    _errorMessage = "";
+    setState(() {
+     _formMode = FormMode.LOGIN; 
+    });
   }
 }
