@@ -5,8 +5,15 @@ class LoginSignUpPage extends StatefulWidget {
   State<StatefulWidget> createState() => _LoginSignUpPageState();
 }
 
+enum FormMode { LOGIN, SIGNUP }
+
 class _LoginSignUpPageState extends State<LoginSignUpPage> {
   final _formKey = new GlobalKey<FormState>();
+
+  String _email;
+  String _password;
+
+  FormMode _formMode = FormMode.LOGIN;
 
   bool _isLoading;
 
@@ -45,7 +52,9 @@ class _LoginSignUpPageState extends State<LoginSignUpPage> {
         child: ListView(
           shrinkWrap: true,
           children: <Widget>[
-            _showLogo()
+            _showLogo(),
+            _showEmailInput(),
+            _showPasswordInput()
           ],
         ),
       ),
@@ -63,6 +72,46 @@ class _LoginSignUpPageState extends State<LoginSignUpPage> {
           child: Image.asset('assets/flutter-icon.png'),
         ),
       ),
+    );
+  }
+
+  Widget _showEmailInput() {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(0.0, 100.0, 0.0, 0.0),
+      child: TextFormField(
+        maxLines: 1,
+        keyboardType: TextInputType.emailAddress,
+        autofocus: false,
+        decoration: InputDecoration(
+          hintText: 'Email',
+          icon: Icon(
+            Icons.mail,
+            color: Colors.grey
+          )
+        ),
+        validator: (value) => value.isEmpty ? 'Email can\'t be empty' : null,
+        onSaved: (value) => _email = value,
+      )
+    );
+  } 
+
+  Widget _showPasswordInput() {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(0.0, 15.0, 0.0, 0.0),
+      child: TextFormField(
+        maxLines: 1,
+        obscureText: true,
+        autofocus: false,
+        decoration: InputDecoration(
+          hintText: 'Password',
+          icon: Icon(
+            Icons.lock,
+            color: Colors.grey
+          )
+        ),
+        validator: (value) => value.isEmpty ? 'Password can\'t be empty' : null,
+        onSaved: (value) => _password = value,
+      )
     );
   }
 }
