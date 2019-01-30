@@ -163,8 +163,27 @@ class _LoginSignUpPageState extends State<LoginSignUpPage> {
     }
   }
 
+  _validateAndSave() {
+    final form = _formKey.currentState;
+    if (form.validate()){
+      form.save();
+      return true;
+    }
+    return false;
+  }
+
   _validateAndSubmit() {
-    return true;
+    setState(() {
+     _errorMessage = "";
+     _isLoading = true; 
+    });
+
+    if (_validateAndSave()) {
+    }
+    
+    setState(() {
+      _isLoading = false; 
+    });
   }
 
   _changeFormToSignUp() {
