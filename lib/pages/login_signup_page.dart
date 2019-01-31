@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutterapp/services/authentication.dart';
 
 class LoginSignUpPage extends StatefulWidget {
+  LoginSignUpPage({this.auth, this.onSignedIn});
+
+  final BaseAuth auth;
+  final VoidCallback onSignedIn;
+
   @override
   State<StatefulWidget> createState() => _LoginSignUpPageState();
 }
@@ -146,7 +152,7 @@ class _LoginSignUpPageState extends State<LoginSignUpPage> {
   }
 
   Widget _showErrorMessage() {
-    if (_errorMessage.length > 0 && _errorMessage != null) {
+    if (_errorMessage != null && _errorMessage.length > 0) {
       return Text(
         _errorMessage,
         style: TextStyle(
@@ -172,18 +178,36 @@ class _LoginSignUpPageState extends State<LoginSignUpPage> {
     return false;
   }
 
-  _validateAndSubmit() {
+  _validateAndSubmit() async {
     setState(() {
      _errorMessage = "";
      _isLoading = true; 
     });
 
     if (_validateAndSave()) {
+      String userId = "";
+      try {
+        if (_formMode == FormMode.LOGIN) {
+          userId = await widget.auth.signIn(_email, _password);
+          print('Signed in user: $userId');
+        } else {
+          userId = await widget.auth.signUp(_email, _password);
+          print('Signed up user: $userId');
+        }
+        setState(() {
+          _isLoading = false; 
+        });
+        if (userId != null && userId.length > 0) {
+          widget.onSignedIn();
+        }
+      } catch(e) {
+        print('Error: $e');
+        setState(() {
+         _isLoading = false;
+         _errorMessage = e.message; 
+        });
+      }
     }
-    
-    setState(() {
-      _isLoading = false; 
-    });
   }
 
   _changeFormToSignUp() {
