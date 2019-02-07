@@ -3,6 +3,7 @@ import 'package:flutterapp/services/authentication.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutterapp/models/todo.dart';
 import 'dart:async';
+import 'package:flutterapp/pages/add_new_page.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key, this.auth, this.userId, this.onSignedOut})
@@ -100,7 +101,7 @@ class _HomePageState extends State<HomePage> {
   _showDialog(BuildContext context) async {
     _textEditingController.clear();
     await showDialog<String>(
-        context: context,
+      context: context,
       builder: (BuildContext context) {
           return AlertDialog(
             content: Row(
@@ -160,21 +161,25 @@ class _HomePageState extends State<HomePage> {
                 trailing: IconButton(
                     icon: (completed)
                         ? Icon(
-                      Icons.done_outline,
-                      color: Colors.green,
-                      size: 20.0,
-                    )
+                            Icons.done_outline,
+                            color: Colors.green,
+                            size: 20.0,
+                          )
                         : Icon(Icons.done, color: Colors.grey, size: 20.0),
                     onPressed: () {
                       _updateTodo(_todoList[index]);
-                    }),
+                    }
+                  ),
               ),
             );
           });
     } else {
-      return Center(child: Text("Welcome. Your list is empty",
-        textAlign: TextAlign.center,
-        style: TextStyle(fontSize: 30.0),));
+      return Center(
+        child: Text("Welcome. Your list is empty",
+          textAlign: TextAlign.center,
+          style: TextStyle(fontSize: 30.0)
+        )
+      );
     }
   }
 
@@ -182,7 +187,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('Flutter login demo'),
+          title: Text('FlutterApp'),
           actions: <Widget>[
             FlatButton(
               child: Text('Logout',
@@ -195,7 +200,11 @@ class _HomePageState extends State<HomePage> {
         body: _showTodoList(),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
-            _showDialog(context);
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => AddNewPage())
+            );
+            // _showDialog(context);
           },
           tooltip: 'Increment',
           child: Icon(Icons.add),
