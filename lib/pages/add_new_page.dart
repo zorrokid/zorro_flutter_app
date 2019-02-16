@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:flutterapp/models/todo.dart';
 
 class AddNewPage extends StatefulWidget {
-  AddNewPage();
+  AddNewPage({Key key, this.userId});
+
+  final String userId;
 
   @override
   State<StatefulWidget> createState() => _AddNewPageState();
@@ -28,6 +31,7 @@ class _AddNewPageState extends State<AddNewPage> {
   ];
   
   Generation _selectedGeneration;
+  String _description;
 
   @override
   void initState() {
@@ -53,6 +57,7 @@ class _AddNewPageState extends State<AddNewPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             TextFormField(
+              controller: myController,
               validator: (value) {
                 if (value.isEmpty) {
                   return 'Please enter some text';
@@ -83,6 +88,8 @@ class _AddNewPageState extends State<AddNewPage> {
                       if (_formKey.currentState.validate()) {
                         Scaffold.of(context)
                           .showSnackBar(SnackBar(content: Text("Processing data")));
+                          final todo = new Todo(myController.text, widget.userId, false);
+                          _addNewTodo(todo);
                       }
                     },
                     child: Text("Submit"),
@@ -94,4 +101,9 @@ class _AddNewPageState extends State<AddNewPage> {
       ),
     );
   }
+  
+  _addNewTodo(Todo todoItem) {
+    _database.reference().child("todo").push().set(todoItem.toJson());
+  }
+
 }
